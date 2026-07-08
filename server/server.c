@@ -5,12 +5,13 @@
 #include <arpa/inet.h>
 
 #define PORT 8080
+#define BUFFER_SIZE 1024
 
 int main()
 {
     int server_fd, client_fd;
     struct sockaddr_in server_addr;
-    char buffer[1024] = {0};
+    char buffer[BUFFER_SIZE] = {0};
 
     // 1. יצירת socket
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -59,7 +60,7 @@ int main()
         memset(buffer, 0, sizeof(buffer));
 
         // 6. recv
-        result = read(client_fd, buffer, 1024);
+        result = read(client_fd, buffer, BUFFER_SIZE);
         if (result == -1)
         {
             perror("read");
@@ -74,7 +75,7 @@ int main()
         printf("Client says: %s\n", buffer);
 
         // 7. send response
-        result = send(client_fd, buffer, strlen(buffer), 0);
+        result = send(client_fd, "Done.", 5, 0);
         if (result == -1)
         {
             perror("send");
