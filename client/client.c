@@ -8,13 +8,14 @@
 #include "parser.c"
 
 #define PORT 8080
+#define BUFFER_SIZE 1024
 
 int main()
 {
     int sock;
     struct sockaddr_in server_addr;
-    char input_buffer[1024] = {0};
-    char response_buffer[1024] = {0};
+    char input_buffer[BUFFER_SIZE] = {0};
+    char response_buffer[BUFFER_SIZE] = {0};
 
     // 1. socket
     sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -44,6 +45,23 @@ int main()
         printf("Enter a message to send to server: ");
         fgets(input_buffer, sizeof(input_buffer), stdin);
 
+        if (input_buffer[0] == '\n')
+        {
+            printf("Empty input. Please enter a valid command.\n");
+            continue;
+        }
+
+        Response response = parser(input_buffer);
+        printf("Result: '%s'\n", response.result);
+        if (response.error_count > 0)
+        {
+            for (int i = 0; i < response.error_count; i++)
+            {
+                printf("Error %d: '%s'\n", i + 1, response.errors[i]);
+            }
+            continue;
+        }
+
         result = send(sock, input_buffer, strlen(input_buffer), 0);
         if (result == -1)
         {
@@ -55,7 +73,7 @@ int main()
         memset(response_buffer, 0, sizeof(response_buffer));
 
         // 4. recv
-        result = read(sock, response_buffer, 1024);
+        result = read(sock, response_buffer, BUFFER_SIZE);
 
         if (result == -1)
         {
