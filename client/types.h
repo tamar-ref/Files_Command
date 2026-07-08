@@ -1,5 +1,9 @@
+#ifndef TYPES_H
+#define TYPES_H
+
 #define MAX_ERRORS 10
 #define ERROR_LENGTH 100
+
 typedef struct
 {
     char command[10];
@@ -9,8 +13,8 @@ typedef struct
 
 typedef struct
 {
-    char result[10];
     char errors[MAX_ERRORS][ERROR_LENGTH];
     int error_count;
-    ParsedCommand command;
 } Response;
+
+#endif

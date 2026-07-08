@@ -6,6 +6,7 @@
 #include <errno.h>
 
 #include "parser.c"
+#include "validation.c"
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
@@ -51,8 +52,8 @@ int main()
             continue;
         }
 
-        Response response = parser(input_buffer);
-        printf("Result: '%s'\n", response.result);
+        ParsedCommand parsedCommand = parser(input_buffer);
+        Response response = validation(parsedCommand);
         if (response.error_count > 0)
         {
             for (int i = 0; i < response.error_count; i++)
