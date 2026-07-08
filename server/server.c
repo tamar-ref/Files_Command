@@ -4,12 +4,15 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#include "../types.h"
+
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
 int main()
 {
     int server_fd, client_fd;
+    ParsedCommand parsedCommand;
     struct sockaddr_in server_addr;
     char buffer[BUFFER_SIZE] = {0};
 
@@ -60,7 +63,7 @@ int main()
         memset(buffer, 0, sizeof(buffer));
 
         // 6. recv
-        result = read(client_fd, buffer, BUFFER_SIZE);
+        result = read(client_fd, &parsedCommand, sizeof(parsedCommand));
         if (result == -1)
         {
             perror("read");
@@ -71,8 +74,6 @@ int main()
             printf("Client disconnected.\n");
             break;
         }
-
-        printf("Client says: %s\n", buffer);
 
         // 7. send response
         result = send(client_fd, "Done.", 5, 0);

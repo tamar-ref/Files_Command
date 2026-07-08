@@ -1,4 +1,4 @@
-#include "types.h"
+#include "../types.h"
 
 void add_error(Response *response, char *message)
 {
@@ -16,49 +16,47 @@ void add_error(Response *response, char *message)
 
 Response validation(ParsedCommand parsedCommand)
 {
-    Response response;
-    // איפוס המבנה
-    memset(&response, 0, sizeof(Response));
-
+    Response response={0};
+    
     if (strlen(parsedCommand.command) == 0)
     {
-        add_error(response, "command is missing");
+        add_error(&response, "command is missing");
     }
     if (strlen(parsedCommand.filename) == 0)
     {
-        add_error(response, "file name is missing");
+        add_error(&response, "file name is missing");
     }
 
     char *commandsWithContent[] = {"WRITE", "APPEND"};
     char *commandsWithoutContent[] = {"CREATE", "READ", "DELETE"};
-    int flag = 0;
+    int known_command_flag = 0;
 
-    for (int i = 0; i < 2 && flag == 0; i++)
+    for (int i = 0; i < 2 && known_command_flag == 0; i++)
     {
         if (strcmp(parsedCommand.command, commandsWithContent[i]) == 0)
         {
-            flag = 1;
+            known_command_flag = 1;
             if (strlen(parsedCommand.content) == 0)
             {
-                add_error(response, "content is missing");
+                add_error(&response, "content is missing");
             }
         }
     }
-    for (int i = 0; i < 3 && flag == 0; i++)
+    for (int i = 0; i < 3 && known_command_flag == 0; i++)
     {
         if (strcmp(parsedCommand.command, commandsWithoutContent[i]) == 0)
         {
-            flag = 1;
+            known_command_flag = 1;
             if (strlen(parsedCommand.content) != 0)
             {
-                add_error(response, "too many arguments");
+                add_error(&response, "too many arguments");
             }
         }
     }
 
-    if (flag == 0)
+    if (known_command_flag == 0)
     {
-        add_error(response, "invalid command");
+        add_error(&response, "invalid command");
     }
 
     return response;

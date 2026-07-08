@@ -10,6 +10,7 @@
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
+#define LOCALHOST_ADDRESS "127.0.0.1"
 
 int main()
 {
@@ -30,7 +31,7 @@ int main()
     server_addr.sin_port = htons(PORT);
 
     // כתובת localhost
-    inet_pton(AF_INET, "127.0.0.1", &server_addr.sin_addr);
+    inet_pton(AF_INET, LOCALHOST_ADDRESS, &server_addr.sin_addr);
 
     // 2. connect
     int result = connect(sock, (struct sockaddr *)&server_addr, sizeof(server_addr));
@@ -63,7 +64,7 @@ int main()
             continue;
         }
 
-        result = send(sock, input_buffer, strlen(input_buffer), 0);
+        result = send(sock, &parsedCommand, sizeof(parsedCommand), 0);
         if (result == -1)
         {
             perror("send");
