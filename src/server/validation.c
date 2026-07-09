@@ -1,4 +1,4 @@
-#include "../general/types.h"
+#include "../../headers/types.h"
 
 Response validation(ParsedCommand parsedCommand)
 {

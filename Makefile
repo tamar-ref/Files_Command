@@ -3,7 +3,14 @@
 all: server client
 
 server:
-	gcc server/server.c -o server/server
+	gcc src/server/server.c \
+	    src/server/validation.c \
+	    src/general/parser.c \
+	    src/general/basic_validation.c \
+	    -o src/server/server
 
 client:
-	gcc client/client.c -o client/client
+	gcc src/client/client.c \
+	    src/general/parser.c \
+	    src/general/basic_validation.c \
+	    -o src/client/client

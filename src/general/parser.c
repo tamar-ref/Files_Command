@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "types.h"
+#include "../../headers/types.h"
 
 int copy_token(char *input, char *destination, char *delimiters, int token_size)
 {
