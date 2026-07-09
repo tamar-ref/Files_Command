@@ -1,7 +1,7 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#define MAX_ERRORS 10
+#define MAX_ERRORS 30
 #define ERROR_LENGTH 100
 
 typedef struct

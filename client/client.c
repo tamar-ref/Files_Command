@@ -5,8 +5,8 @@
 
 #include <errno.h>
 
-#include "parser.c"
-#include "validation.c"
+#include "../general/parser.c"
+#include "../general/basic_validation.c"
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
@@ -54,7 +54,7 @@ int main()
         }
 
         ParsedCommand parsedCommand = parser(input_buffer);
-        Response response = validation(parsedCommand);
+        Response response = is_command_valid(parsedCommand);
         if (response.error_count > 0)
         {
             for (int i = 0; i < response.error_count; i++)
@@ -64,7 +64,7 @@ int main()
             continue;
         }
 
-        result = send(sock, &parsedCommand, sizeof(parsedCommand), 0);
+        result = send(sock, input_buffer, strlen(input_buffer), 0);
         if (result == -1)
         {
             perror("send");

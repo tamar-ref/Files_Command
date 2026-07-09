@@ -1,4 +1,4 @@
-#include "../types.h"
+#include "types.h"
 
 void add_error(Response *response, char *message)
 {
@@ -14,7 +14,7 @@ void add_error(Response *response, char *message)
     response->error_count++;
 }
 
-Response validation(ParsedCommand parsedCommand)
+Response is_command_valid(ParsedCommand parsedCommand)
 {
     Response response={0};
     
