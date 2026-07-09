@@ -14,11 +14,16 @@
 
 void set_message(char *message, Response response)
 {
-    message = "Errors:\n";
-    for (int i = 0; i < response.error_count; i++)
+    for (int i = 1; i <= response.error_count; i++)
     {
-        message = strcat(message, response.errors[i]);
-        message = strcat(message, "\n");
+        char temp[150];
+
+        snprintf(temp, sizeof(temp),
+                 "Error %d: %s\n",
+                 i + 1,
+                 response.errors[i]);
+
+        strcat(message, temp);
     }
 }
 
@@ -37,7 +42,7 @@ int main()
     int server_fd, client_fd, result;
     struct sockaddr_in server_addr;
     char buffer[BUFFER_SIZE] = {0};
-    char *message = "Hello from server!";
+    char message[BUFFER_SIZE] = {0};
     ParsedCommand parsedCommand;
     Response response;
 
@@ -96,7 +101,7 @@ int main()
         }
         else if (result == 0)
         {
-            message = "Client disconnected.\n";
+            strcpy(message, "Client disconnected.\n");
             if (send_message(client_fd, message) == -1)
             {
                 return 1;
@@ -106,7 +111,7 @@ int main()
 
         if (buffer[0] == '\n')
         {
-            message = "Empty input. Please enter a valid command.\n";
+            strcpy(message, "Empty input. Please enter a valid command.\n");
             if (send_message(client_fd, message) == -1)
             {
                 return 1;
@@ -119,7 +124,7 @@ int main()
         if (response.error_count > 0)
         {
             set_message(message, response);
-            if (send_message(client_fd, "Validation errors:\n") == -1)
+            if (send_message(client_fd, message) == -1)
             {
                 return 1;
             }
@@ -137,7 +142,7 @@ int main()
             continue;
         }
 
-        message = "Command received and validated successfully.\n";
+        strcpy(message, "Done.\n");
         if (send_message(client_fd, message) == 0)
         {
             return 1;

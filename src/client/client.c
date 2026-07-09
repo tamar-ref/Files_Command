@@ -59,7 +59,7 @@ int main()
         {
             for (int i = 0; i < response.error_count; i++)
             {
-                printf("Error %d: '%s'\n", i + 1, response.errors[i]);
+                printf("Error %d: %s\n", i + 1, response.errors[i]);
             }
             continue;
         }
@@ -87,7 +87,7 @@ int main()
             printf("Server closed the connection.\n");
             break;
         }
-        printf("Server says: %s\n", response_buffer);
+        printf("%s", response_buffer);
     }
 
     // 5. close
