@@ -2,11 +2,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-
 #include <errno.h>
 
-#include "../general/parser.c"
-#include "../general/basic_validation.c"
+#include "../../headers/types.h"
+#include "../../headers/general/parser.h"
+#include "../../headers/general/basic_validation.h"
 
 #define PORT 8080
 #define BUFFER_SIZE 1024

@@ -1,4 +1,5 @@
-#include "types.h"
+#include <string.h>
+#include "../../headers/types.h"
 
 void add_error(Response *response, char *message)
 {
@@ -16,8 +17,8 @@ void add_error(Response *response, char *message)
 
 Response is_command_valid(ParsedCommand parsedCommand)
 {
-    Response response={0};
-    
+    Response response = {0};
+
     if (strlen(parsedCommand.command) == 0)
     {
         add_error(&response, "command is missing");
