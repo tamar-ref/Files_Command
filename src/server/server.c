@@ -14,7 +14,7 @@
 
 void set_message(char *message, Response response)
 {
-    for (int i = 1; i <= response.error_count; i++)
+    for (int i = 0; i < response.error_count; i++)
     {
         char temp[150];
 
@@ -91,6 +91,7 @@ int main()
     {
         // איפוס הבאפר לפני כל קריאה חדשה כדי שלא יישארו שאריות מהקלט הקודם
         memset(buffer, 0, sizeof(buffer));
+        memset(message, 0, sizeof(message));
 
         // 6. recv
         result = read(client_fd, buffer, sizeof(buffer));
