@@ -44,7 +44,7 @@ int main()
     // 3. send
     while (1)
     {
-        printf("Enter a message to send to server: ");
+        printf("Enter command: ");
         fgets(input_buffer, sizeof(input_buffer), stdin);
 
         if (input_buffer[0] == '\n')
@@ -57,9 +57,16 @@ int main()
         Response response = is_command_valid(parsedCommand);
         if (response.error_count > 0)
         {
-            for (int i = 0; i < response.error_count; i++)
+            if (response.error_count == 1)
             {
-                printf("Error %d: %s\n", i + 1, response.errors[i]);
+                printf("Error: %s\n", response.errors[0]);
+            }
+            else
+            {
+                for (int i = 0; i < response.error_count; i++)
+                {
+                    printf("Error %d: %s\n", i + 1, response.errors[i]);
+                }
             }
             continue;
         }

@@ -116,7 +116,7 @@ int main()
             continue;
         }
 
-        strcpy(message, "Done.\n");
+        strcpy(message, response.success_message);
         if (send_message(client_fd, message) == 0)
         {
             return 1;

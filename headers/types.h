@@ -2,7 +2,8 @@
 #define TYPES_H
 
 #define MAX_ERRORS 30
-#define MESSAGE_LENGTH 100
+#define ERROR_LENGTH 100
+#define BUFER_SIZE 1024
 
 typedef struct
 {
@@ -13,9 +14,9 @@ typedef struct
 
 typedef struct
 {
-    char errors[MAX_ERRORS][MESSAGE_LENGTH];
+    char errors[MAX_ERRORS][ERROR_LENGTH];
     int error_count;
-    char success_message[MESSAGE_LENGTH];
+    char success_message[BUFER_SIZE];
 } Response;
 
 #endif
