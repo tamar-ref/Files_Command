@@ -7,7 +7,7 @@
 
 void is_forbidden_path(char *filename, Response *response)
 {
-    if (strstr(filename, "../"))
+    if (strchr(filename, '/'))
     {
         add_error(response, "cannot access a file external to the output directory");
     }

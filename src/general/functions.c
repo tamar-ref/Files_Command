@@ -44,7 +44,6 @@ int send_message(int client_fd, char *message)
 
 int handle_response(int client_fd, char *message, Response response)
 {
-    printf("%d\n", response.error_count);
     if (response.error_count == 0)
     {
         return 0;
