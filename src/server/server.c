@@ -7,35 +7,12 @@
 #include "../../headers/types.h"
 #include "../../headers/general/parser.h"
 #include "../../headers/general/basic_validation.h"
+#include "../../headers/general/functions.h"
 #include "../../headers/server/validation.h"
+#include "../../headers/server/file_manager.h"
 
 #define PORT 8080
 #define BUFFER_SIZE 1024
-
-void set_message(char *message, Response response)
-{
-    for (int i = 0; i < response.error_count; i++)
-    {
-        char temp[150];
-
-        snprintf(temp, sizeof(temp),
-                 "Error %d: %s\n",
-                 i + 1,
-                 response.errors[i]);
-
-        strcat(message, temp);
-    }
-}
-
-int send_message(int client_fd, char *message)
-{
-    int result = send(client_fd, message, strlen(message), 0);
-    if (result == -1)
-    {
-        perror("send");
-    }
-    return result;
-}
 
 int main()
 {
@@ -122,24 +99,20 @@ int main()
 
         parsedCommand = parser(buffer);
         response = is_command_valid(parsedCommand);
-        if (response.error_count > 0)
+        if (handle_response(client_fd, message, response))
         {
-            set_message(message, response);
-            if (send_message(client_fd, message) == -1)
-            {
-                return 1;
-            }
             continue;
         }
 
         response = validation(parsedCommand);
-        if (response.error_count > 0)
+        if (handle_response(client_fd, message, response))
         {
-            set_message(message, response);
-            if (send_message(client_fd, message) == -1)
-            {
-                return 1;
-            }
+            continue;
+        }
+
+        response = file_manager(parsedCommand);
+        if (handle_response(client_fd, message, response))
+        {
             continue;
         }
 

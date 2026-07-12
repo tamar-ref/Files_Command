@@ -9,9 +9,9 @@ void add_error(Response *response, char *message)
     strncpy(
         response->errors[response->error_count],
         message,
-        ERROR_LENGTH - 1);
+        MESSAGE_LENGTH - 1);
 
-    response->errors[response->error_count][ERROR_LENGTH - 1] = '\0';
+    response->errors[response->error_count][MESSAGE_LENGTH - 1] = '\0';
     response->error_count++;
 }
 
