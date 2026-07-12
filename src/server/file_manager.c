@@ -81,3 +81,12 @@
 //         }
 //     }
 // }
+
+#include "../../headers/types.h"
+
+Response file_manager(ParsedCommand ParsedCommand)
+{
+    Response response = {0};
+
+    return response;
+}
