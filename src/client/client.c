@@ -80,7 +80,7 @@ int get_input(char *text, char *input_buffer, int input_size)
 
 int main()
 {
-    int sock, result;
+    int sock, result, filename_size;
     char input_buffer[BUFFER_SIZE] = {0};
     char response_buffer[BUFFER_SIZE] = {0};
     Response response;
@@ -101,14 +101,41 @@ int main()
         {
             continue;
         }
+        while (1)
+        {
+            char size[4];
+            if (get_input("Enter size of filename: ", size, sizeof(size)) == -1)
+            {
+                continue;
+            }
 
-        ParsedCommand parsedCommand = parser(input_buffer);
+            char *end;
+            filename_size = strtol(size, &end, 10);
+
+            if (*end != '\n' && *end != '\0')
+            {
+                printf("please enter a number only.\n");
+                continue;
+            }
+
+            break;
+        }
+
+        ParsedCommand parsedCommand = parser(input_buffer, filename_size);
+        printf("%s,%s,%s\n", parsedCommand.command, parsedCommand.filename, parsedCommand.content);
         response = is_command_valid(parsedCommand);
         if (response.error_count > 0)
         {
             set_message(message, response);
             printf("%s", message);
             continue;
+        }
+
+        result = send(sock, &filename_size, sizeof(filename_size), 0);
+        if (result == -1)
+        {
+            perror("send (filename_size)");
+            return 1;
         }
 
         result = send(sock, input_buffer, strlen(input_buffer), 0);

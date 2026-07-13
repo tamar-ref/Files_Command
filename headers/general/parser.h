@@ -3,7 +3,6 @@
 
 #include "../types.h"
 
-int copy_token(char *input, char *destination, char *delimiters, int token_size);
-ParsedCommand parser(char *input);
+ParsedCommand parser(char *input, int file_name);
 
 #endif

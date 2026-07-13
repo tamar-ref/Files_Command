@@ -64,7 +64,7 @@ int accept_client(int server_fd)
 
 int main()
 {
-    int server_fd, client_fd, result;
+    int server_fd, client_fd, result, received_filename_size = 0;
     struct sockaddr_in server_addr;
     char buffer[BUFFER_SIZE] = {0};
     char message[BUFFER_SIZE] = {0};
@@ -95,6 +95,22 @@ int main()
         memset(buffer, 0, sizeof(buffer));
         memset(message, 0, sizeof(message));
 
+        result = read(client_fd, &received_filename_size, sizeof(received_filename_size));
+        if (result == -1)
+        {
+            perror("read");
+            return 1;
+        }
+        else if (result == 0)
+        {
+            strcpy(message, "Client disconnected.\n");
+            if (send_message(client_fd, message) == -1)
+            {
+                return 1;
+            }
+            break;
+        }
+
         result = read(client_fd, buffer, sizeof(buffer));
         if (result == -1)
         {
@@ -121,7 +137,7 @@ int main()
             continue;
         }
 
-        parsedCommand = parser(buffer);
+        parsedCommand = parser(buffer, 5);
         response = is_command_valid(parsedCommand);
         if (handle_response(client_fd, message, response))
         {
