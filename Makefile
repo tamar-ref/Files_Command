@@ -15,4 +15,5 @@ client:
 	gcc src/client/client.c \
 	    src/general/parser.c \
 	    src/general/basic_validation.c \
+	    src/general/functions.c \
 	    -o src/client/client

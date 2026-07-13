@@ -32,9 +32,9 @@ void set_message(char *message, Response response)
     }
 }
 
-int send_message(int client_fd, char *message)
+int send_message(int socket_fd, char *message)
 {
-    int result = send(client_fd, message, strlen(message), 0);
+    int result = send(socket_fd, message, strlen(message), 0);
     if (result == -1)
     {
         perror("send");
@@ -42,12 +42,16 @@ int send_message(int client_fd, char *message)
     return result;
 }
 
-int handle_response(int client_fd, char *message, Response response)
+int handle_response(int socket_fd, char *message, Response response)
 {
     if (response.error_count == 0)
     {
         return 0;
     }
     set_message(message, response);
-    return send_message(client_fd, message);
+    if (send_message(socket_fd, message) == -1)
+    {
+        return -1;
+    }
+    return 1;
 }

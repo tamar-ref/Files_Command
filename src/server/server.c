@@ -14,6 +14,54 @@
 #define PORT 8080
 #define BUFFER_SIZE 1024
 
+int setup_server()
+{
+    int server_fd;
+    struct sockaddr_in server_addr = {0};
+
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd == -1)
+    {
+        perror("socket");
+        return -1;
+    }
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(PORT);
+
+    if (bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
+    {
+        perror("bind");
+        close(server_fd);
+        return -1;
+    }
+
+    if (listen(server_fd, 5) == -1)
+    {
+        perror("listen");
+        close(server_fd);
+        return -1;
+    }
+
+    return server_fd;
+}
+
+int accept_client(int server_fd)
+{
+    int client_fd;
+
+    client_fd = accept(server_fd, NULL, NULL);
+
+    if (client_fd == -1)
+    {
+        perror("accept");
+        return -1;
+    }
+
+    return client_fd;
+}
+
 int main()
 {
     int server_fd, client_fd, result;
@@ -23,42 +71,20 @@ int main()
     ParsedCommand parsedCommand;
     Response response;
 
-    // 1. יצירת socket
-    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    server_fd = setup_server();
+
     if (server_fd == -1)
     {
-        perror("socket");
-        return 1;
-    }
-
-    // 2. הגדרת השרת
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = htons(PORT);
-
-    // 3. bind
-    result = bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
-    if (result == -1)
-    {
-        perror("bind");
-        return 1;
-    }
-
-    // 4. listen
-    result = listen(server_fd, 5);
-    if (result == -1)
-    {
-        perror("listen");
         return 1;
     }
 
     printf("Server is running...\n");
 
-    // 5. accept
-    client_fd = accept(server_fd, NULL, NULL);
+    client_fd = accept_client(server_fd);
+
     if (client_fd == -1)
     {
-        perror("accept");
+        close(server_fd);
         return 1;
     }
 
@@ -66,11 +92,9 @@ int main()
 
     while (1)
     {
-        // איפוס הבאפר לפני כל קריאה חדשה כדי שלא יישארו שאריות מהקלט הקודם
         memset(buffer, 0, sizeof(buffer));
         memset(message, 0, sizeof(message));
 
-        // 6. recv
         result = read(client_fd, buffer, sizeof(buffer));
         if (result == -1)
         {
@@ -123,7 +147,6 @@ int main()
         }
     }
 
-    // 8. close
     printf("Closing connections...\n");
     close(client_fd);
     close(server_fd);
